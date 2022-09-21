@@ -94,5 +94,26 @@ namespace SubmarineGame
         }
 
         #endregion
+
+        #region View event handlers
+
+        private void View_Closing(object sender, CancelEventArgs e)
+        {
+            bool restartTimer = _timer.IsEnabled;
+
+            StopTimers();
+
+            if (MessageBox.Show("Are you sure you want to quit?", "Submarine Game", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+
+                if (restartTimer)
+                {
+                    StartTimers();
+                }
+            }
+        }
+
+        #endregion
     }
 }
