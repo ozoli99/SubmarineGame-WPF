@@ -93,5 +93,67 @@ namespace SubmarineGame.ViewModel
         }
 
         #endregion
+
+        #region Model event handlers
+
+        private void Model_SubmarineMoved(object sender, SubmarineEventArgs e)
+        {
+            Submarine.X = _model.Submarine.X;
+            Submarine.Y = _model.Submarine.Y;
+        }
+
+        private void Model_MineMoved(object sender, MineEventArgs e)
+        {
+            Mines[e.MineID].Y = _model.Mines[e.MineID].Y;
+        }
+
+        private void Model_MineDestroyed(object sender, MineEventArgs e)
+        {
+            Mines.RemoveAt(e.MineID);
+            OnPropertyChanged("DestroyedMineCount");
+        }
+
+        private void Model_MineAdded(object sender, MineEventArgs e)
+        {
+            if (_model.Mines.Count > Mines.Count)
+            {
+                Mines.Add(new Shape
+                {
+                    X = _model.Mines[e.MineID].X,
+                    Y = _model.Mines[e.MineID].Y,
+                    Width = _model.Mines[e.MineID].Width,
+                    Height = _model.Mines[e.MineID].Height,
+                    Weight = _model.Mines[e.MineID].Weight
+                });
+            }
+        }
+
+        private void Model_GameCreated(object sender, EventArgs e)
+        {
+            Mines.Clear();
+            for (int i = 0; i < _model.Mines.Count; i++)
+            {
+                Mines.Add(new Shape
+                {
+                    X = _model.Mines[i].X,
+                    Y = _model.Mines[i].Y,
+                    Width = _model.Mines[i].Width,
+                    Height = _model.Mines[i].Height,
+                    Weight = _model.Mines[i].Weight
+                });
+            }
+            Submarine.X = _model.Submarine.X;
+            Submarine.Y = _model.Submarine.Y;
+            Submarine.Width = _model.Submarine.Width;
+            Submarine.Height = _model.Submarine.Height;
+            Submarine.Weight = _model.Submarine.Weight;
+        }
+
+        private void Model_GameTimeElapsed(object sender, EventArgs e)
+        {
+            OnPropertyChanged("GameTime");
+        }
+
+        #endregion
     }
 }
