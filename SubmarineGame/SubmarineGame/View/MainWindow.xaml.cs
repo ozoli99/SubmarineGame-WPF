@@ -43,7 +43,7 @@ namespace SubmarineGame.View
             }
         }
 
-        private void OnLoad(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             submarine.Focus();
         }

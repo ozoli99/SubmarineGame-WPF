@@ -1,5 +1,5 @@
 ﻿SubmarineGame
-1.0.0.0
+
 
 winexe
 C#
@@ -12,7 +12,7 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 F:\Projects\Demos\DotNET\SubmarineGame-WPF\SubmarineGame\SubmarineGame\App.xaml
 1-487866684
 
-18-1503550578
+161066802909
 1942030480316
 View\MainWindow.xaml;
 

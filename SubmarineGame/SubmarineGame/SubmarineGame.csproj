@@ -7,4 +7,35 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\nuclear-bomb.png" />
+    <None Remove="Resources\pause-button.png" />
+    <None Remove="Resources\sea.png" />
+    <None Remove="Resources\submarine.png" />
+    <None Remove="Resources\submarineLeft.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Resource Include="Resources\nuclear-bomb.png" />
+	<Resource Include="Resources\pause-button.png" />
+	<Resource Include="Resources\sea.png" />
+	<Resource Include="Resources\submarine.png" />
+    <Resource Include="Resources\submarineLeft.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
