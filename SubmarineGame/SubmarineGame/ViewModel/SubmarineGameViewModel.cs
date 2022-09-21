@@ -155,5 +155,33 @@ namespace SubmarineGame.ViewModel
         }
 
         #endregion
+
+        #region Event methods
+
+        private void OnNewGame()
+        {
+            if (NewGame != null)
+                NewGame(this, EventArgs.Empty);
+        }
+
+        private void OnLoadGame()
+        {
+            if (LoadGame != null)
+                LoadGame(this, EventArgs.Empty);
+        }
+
+        private void OnSaveGame()
+        {
+            if (SaveGame != null)
+                SaveGame(this, EventArgs.Empty);
+        }
+
+        private void OnExitGame()
+        {
+            if (ExitGame != null)
+                ExitGame(this, EventArgs.Empty);
+        }
+
+        #endregion
     }
 }
