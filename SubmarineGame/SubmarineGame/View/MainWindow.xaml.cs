@@ -1,7 +1,9 @@
 ﻿using SubmarineGame.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SubmarineGame.View
 {
@@ -30,7 +32,7 @@ namespace SubmarineGame.View
             {
                 case Key.Left:
                 case Key.A:
-                    submarineImage.ImageSource = new BitmapImage(new Url("pack://application:,,,/Resources/submarineLeft.png"));
+                    submarineImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Resources/submarineLeft.png"));
                     submarine.Source = submarineImage.ImageSource;
                     break;
                 case Key.Right:
