@@ -8,12 +8,12 @@ namespace Model
     {
         #region Constants
 
-        public const Int32 GameAreaWidth = 940;
-        public const Int32 GameAreaHeight = 700;
-        public const Int32 SubmarineSize = 64;
-        public const Int32 MineSize = 64;
-        public const Int32 SubmarineStep = 10;
-        public const Int32 MineStep = 5;
+        public const int GameAreaWidth = 940;
+        public const int GameAreaHeight = 700;
+        public const int SubmarineSize = 64;
+        public const int MineSize = 64;
+        public const int SubmarineStep = 10;
+        public const int MineStep = 5;
 
         #endregion
 
@@ -22,14 +22,14 @@ namespace Model
         private Shape _submarine;
         private List<Shape> _mines;
         private Random _random;
-        private Int32 _destroyedMineCount;
+        private int _destroyedMineCount;
         private IPersistence _persistence;
 
         #endregion
 
         #region Public fields
 
-        public Int32 gameTime;
+        public int gameTime;
 
         #endregion
 
@@ -103,13 +103,13 @@ namespace Model
                 return;
 
             List<Shape> mines = new List<Shape>();
-            for (Int32 i = 0; i < _mines.Count; ++i)
+            for (int i = 0; i < _mines.Count; ++i)
             {
                 mines.Add(_mines[i]);
             }
             Shape submarine = _submarine;
-            Int32 gameTime = this.gameTime;
-            Int32 destroyedMineCount = _destroyedMineCount;
+            int gameTime = this.gameTime;
+            int destroyedMineCount = _destroyedMineCount;
 
             _persistence.Save(fileName, mines, submarine, gameTime, destroyedMineCount);
         }
@@ -162,7 +162,7 @@ namespace Model
 
         public void MoveMines()
         {
-            for (Int32 i = 0; i < _mines.Count; ++i)
+            for (int i = 0; i < _mines.Count; ++i)
             {
                 _mines[i].Y = _mines[i].Y + (_mines[i].Weight * MineStep);
                 if (_mines[i].Y > GameAreaHeight)
@@ -179,8 +179,8 @@ namespace Model
 
         public Shape AddMine()
         {
-            Int32 mineX = _random.Next(1, GameAreaWidth - MineSize);
-            Int32 mineWeight = _random.Next(1, 4);
+            int mineX = _random.Next(1, GameAreaWidth - MineSize);
+            int mineWeight = _random.Next(1, 4);
 
             Shape newMine = new Shape(ShapeType.Mine, mineX, 0, MineSize, MineSize, mineWeight);
 
@@ -203,7 +203,7 @@ namespace Model
 
         private void GenerateStartingMines()
         {
-            for (Int32 i = 0; i < 6; ++i)
+            for (int i = 0; i < 6; ++i)
             {
                 AddMine();
             }
@@ -211,12 +211,12 @@ namespace Model
 
         private void CheckGame()
         {
-            for (Int32 i = 0; i < _mines.Count; ++i)
+            for (int i = 0; i < _mines.Count; ++i)
             {
-                Boolean collisionLeftAndBottom = (_mines[i].X <= _submarine.X && (_mines[i].X + _mines[i].Width) >= _submarine.X) && (_mines[i].Y <= _submarine.Y && (_mines[i].Y + _mines[i].Height) >= _submarine.Y);
-                Boolean collisionRightAndBottom = (_mines[i].X <= (_submarine.X + _submarine.Width) && (_mines[i].X + _mines[i].Width) >= (_submarine.X + _submarine.Width)) && (_mines[i].Y <= _submarine.Y && (_mines[i].Y + _mines[i].Height) >= _submarine.Y);
-                Boolean collisionLeftAndTop = (_mines[i].X <= _submarine.X && (_mines[i].X + _mines[i].Width) >= _submarine.X) && (_mines[i].Y <= (_submarine.Y + _submarine.Height) && (_mines[i].Y + _mines[i].Height) >= (_submarine.Y + _submarine.Height));
-                Boolean collisionRightAndTop = (_mines[i].X <= (_submarine.X + _submarine.Width) && (_mines[i].X + _mines[i].Width) >= (_submarine.X + _submarine.Width) && (_mines[i].Y <= (_submarine.Y + _submarine.Height)) && (_mines[i].Y + _mines[i].Height) >= (_submarine.Y + _submarine.Height));
+                bool collisionLeftAndBottom = (_mines[i].X <= _submarine.X && (_mines[i].X + _mines[i].Width) >= _submarine.X) && (_mines[i].Y <= _submarine.Y && (_mines[i].Y + _mines[i].Height) >= _submarine.Y);
+                bool collisionRightAndBottom = (_mines[i].X <= (_submarine.X + _submarine.Width) && (_mines[i].X + _mines[i].Width) >= (_submarine.X + _submarine.Width)) && (_mines[i].Y <= _submarine.Y && (_mines[i].Y + _mines[i].Height) >= _submarine.Y);
+                bool collisionLeftAndTop = (_mines[i].X <= _submarine.X && (_mines[i].X + _mines[i].Width) >= _submarine.X) && (_mines[i].Y <= (_submarine.Y + _submarine.Height) && (_mines[i].Y + _mines[i].Height) >= (_submarine.Y + _submarine.Height));
+                bool collisionRightAndTop = (_mines[i].X <= (_submarine.X + _submarine.Width) && (_mines[i].X + _mines[i].Width) >= (_submarine.X + _submarine.Width) && (_mines[i].Y <= (_submarine.Y + _submarine.Height)) && (_mines[i].Y + _mines[i].Height) >= (_submarine.Y + _submarine.Height));
 
                 if (collisionLeftAndBottom || collisionRightAndBottom || collisionLeftAndTop || collisionRightAndTop)
                 {
