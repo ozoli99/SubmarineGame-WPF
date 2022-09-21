@@ -115,5 +115,60 @@ namespace SubmarineGame
         }
 
         #endregion
+
+        #region ViewModel event handlers
+
+        private void ViewModel_NewGame(object sender, EventArgs e)
+        {
+            StopTimers();
+
+            _model.NewGame();
+            TurnOffPauseBackground();
+            _generatorTimer.Interval = TimeSpan.FromMilliseconds(3000);
+            StartTimers();
+        }
+
+        private void ViewModel_LoadGame(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Title = "Loading Submarine Game";
+                openFileDialog.Filter = "Submarine Game file|*.smg";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    _model.LoadGame(openFileDialog.FileName);
+                }
+            }
+            catch (DataException)
+            {
+                MessageBox.Show("Submarine Game file loading failed.", "Submarine Game", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ViewModel_SaveGame(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "Saving Submarine Game";
+                saveFileDialog.Filter = "Submarine Game file|*.smg";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    _model.SaveGame(saveFileDialog.FileName);
+                }
+            }
+            catch (DataException)
+            {
+                MessageBox.Show("Submarine Game file saving failed.", "Submarine Game", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ViewModel_ExitGame(object sender, EventArgs e)
+        {
+            _view.Close();
+        }
+
+        #endregion
     }
 }
