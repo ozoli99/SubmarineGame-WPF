@@ -1,4 +1,5 @@
-﻿using SubmarineGame.Model;
+﻿using Microsoft.Win32;
+using SubmarineGame.Model;
 using SubmarineGame.Persistence;
 using SubmarineGame.View;
 using SubmarineGame.ViewModel;
@@ -140,7 +141,7 @@ namespace SubmarineGame
                     _model.LoadGame(openFileDialog.FileName);
                 }
             }
-            catch (DataException)
+            catch (Persistence.DataException)
             {
                 MessageBox.Show("Submarine Game file loading failed.", "Submarine Game", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -158,7 +159,7 @@ namespace SubmarineGame
                     _model.SaveGame(saveFileDialog.FileName);
                 }
             }
-            catch (DataException)
+            catch (Persistence.DataException)
             {
                 MessageBox.Show("Submarine Game file saving failed.", "Submarine Game", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -202,6 +203,38 @@ namespace SubmarineGame
                 StartTimers();
                 TurnOffPauseBackground();
             }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void StopTimers()
+        {
+            _timer.Stop();
+            _moverTimer.Stop();
+            _generatorTimer.Stop();
+        }
+
+        private void StartTimers()
+        {
+            _timer.Start();
+            _moverTimer.Start();
+            _generatorTimer.Start();
+        }
+
+        private void TurnOnPauseBackground()
+        {
+            _view.pauseBackground.Opacity = 0.5;
+            _view.pause.Visibility = Visibility.Visible;
+            _view.menu.IsEnabled = true;
+        }
+
+        private void TurnOffPauseBackground()
+        {
+            _view.pauseBackground.Opacity = 0;
+            _view.pause.Visibility = Visibility.Hidden;
+            _view.menu.IsEnabled = false;
         }
 
         #endregion
