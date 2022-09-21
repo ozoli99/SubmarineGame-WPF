@@ -77,5 +77,21 @@ namespace SubmarineGame.ViewModel
         }
 
         #endregion
+
+        #region Public methods
+
+        public void SubmarineStep(string stepDirection)
+        {
+            switch (stepDirection)
+            {
+                case "Up": case "W": _model.Submarine_MoveUp(); break;
+                case "Down": case "S": _model.Submarine_MoveDown(); break;
+                case "Left": case "A": _model.Submarine_MoveLeft(); break;
+                case "Right": case "D": _model.Submarine_MoveRight(); break;
+                case "Space": _model.PauseGame(); break;
+            }
+        }
+
+        #endregion
     }
 }
