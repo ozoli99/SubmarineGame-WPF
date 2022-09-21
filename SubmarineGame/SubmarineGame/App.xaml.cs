@@ -170,5 +170,40 @@ namespace SubmarineGame
         }
 
         #endregion
+
+        #region Model event handlers
+
+        private void Model_GameOver(object sender, SubmarineEventArgs e)
+        {
+            StopTimers();
+            _view.pauseBackground.Opacity = 0.5;
+            MessageBox.Show("Your submarine exploded!" + Environment.NewLine +
+                            "Time: " + TimeSpan.FromSeconds(e.GameTime).ToString("g") + Environment.NewLine +
+                            "Destroyed mines: " + e.DestroyedMineCount.ToString("g"),
+                            "Submarine Game",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Asterisk);
+
+            _model.NewGame();
+            _view.pauseBackground.Opacity = 0;
+            _generatorTimer.Interval = TimeSpan.FromMilliseconds(3000);
+            StartTimers();
+        }
+
+        private void Model_TimePaused(object sender, SubmarineEventArgs e)
+        {
+            if (_timer.IsEnabled)
+            {
+                StopTimers();
+                TurnOnPauseBackground();
+            }
+            else
+            {
+                StartTimers();
+                TurnOffPauseBackground();
+            }
+        }
+
+        #endregion
     }
 }
