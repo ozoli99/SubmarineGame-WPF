@@ -1,8 +1,8 @@
-﻿using Persistence;
+﻿using SubmarineGame.Persistence;
 using System;
 using System.Collections.Generic;
 
-namespace Model
+namespace SubmarineGame.Model
 {
     public class SubmarineGameModel
     {
