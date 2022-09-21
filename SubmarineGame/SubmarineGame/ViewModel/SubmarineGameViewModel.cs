@@ -35,5 +35,47 @@ namespace SubmarineGame.ViewModel
         public event EventHandler ExitGame;
 
         #endregion
+
+        #region Constructor
+
+        public SubmarineGameViewModel(SubmarineGameModel model)
+        {
+            _model = model;
+            _model.SubmarineMoved += new EventHandler<SubmarineEventArgs>(Model_SubmarineMoved);
+            _model.MineMoved += new EventHandler<MineEventArgs>(Model_MineMoved);
+            _model.MineDestroyed += new EventHandler<MineEventArgs>(Model_MineDestroyed);
+            _model.MineAdded += new EventHandler<MineEventArgs>(Model_MineAdded);
+            _model.GameCreated += new EventHandler(Model_GameCreated);
+            _model.GameTimeElapsed += new EventHandler(Model_GameTimeElapsed);
+
+            NewGameCommand = new DelegateCommand(param => OnNewGame());
+            LoadGameCommand = new DelegateCommand(param => OnLoadGame());
+            SaveGameCommand = new DelegateCommand(param => OnSaveGame());
+            ExitCommand = new DelegateCommand(param => OnExitGame());
+
+            Mines = new ObservableCollection<Shape>();
+            for (int i = 0; i < _model.Mines.Count; i++)
+            {
+                Mines.Add(new Shape
+                {
+                    X = _model.Mines[i].X,
+                    Y = _model.Mines[i].Y,
+                    Width = _model.Mines[i].Width,
+                    Height = _model.Mines[i].Height,
+                    Weight = _model.Mines[i].Weight,
+                });
+            }
+            Submarine = new Submarine
+            {
+                X = _model.Submarine.X,
+                Y = _model.Submarine.Y,
+                Width = _model.Submarine.Width,
+                Height = _model.Submarine.Height,
+                Weight = _model.Submarine.Weight,
+                StepCommand = new DelegateCommand(param => SubmarineStep(param.ToString()))
+            };
+        }
+
+        #endregion
     }
 }
