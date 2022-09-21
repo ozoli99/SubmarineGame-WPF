@@ -23,13 +23,8 @@ namespace Model
         private List<Shape> _mines;
         private Random _random;
         private int _destroyedMineCount;
+        private int _gameTime;
         private IPersistence _persistence;
-
-        #endregion
-
-        #region Public fields
-
-        public int gameTime;
 
         #endregion
 
@@ -37,8 +32,12 @@ namespace Model
 
         public event EventHandler<SubmarineEventArgs> GameOver;
         public event EventHandler<SubmarineEventArgs> SubmarineMoved;
-        public event EventHandler<SubmarineEventArgs> MineDestroyed;
         public event EventHandler<SubmarineEventArgs> TimePaused;
+        public event EventHandler<MineEventArgs> MineDestroyed;
+        public event EventHandler<MineEventArgs> MineMoved;
+        public event EventHandler<MineEventArgs> MineAdded;
+        public event EventHandler GameCreated;
+        public event EventHandler GameTimeElapsed;
 
         #endregion
 
@@ -46,6 +45,9 @@ namespace Model
 
         public Shape Submarine { get { return _submarine; } }
         public IList<Shape> Mines { get { return _mines.AsReadOnly(); } }
+        public int DestroyedMineCount { get { return _destroyedMineCount; } }
+        public int GameTime { get { return _gameTime; } }
+        public bool IsGameOver { get; set; }
 
         #endregion
 
@@ -55,7 +57,8 @@ namespace Model
         public SubmarineGameModel(IPersistence persistence)
         {
             _destroyedMineCount = 0;
-            gameTime = 0;
+            _gameTime = 0;
+            IsGameOver = false;
 
             _random = new Random();
 
@@ -72,13 +75,15 @@ namespace Model
         public void NewGame()
         {
             _destroyedMineCount = 0;
-            gameTime = 0;
+            _gameTime = 0;
 
             _submarine.X = (GameAreaWidth - SubmarineSize) / 2;
             _submarine.Y = (GameAreaHeight - SubmarineSize);
 
             _mines.Clear();
             GenerateStartingMines();
+
+            GameCreated?.Invoke(this, EventArgs.Empty);
         }
 
         public void LoadGame(String fileName)
@@ -86,13 +91,15 @@ namespace Model
             if (_persistence == null)
                 return;
 
-            List<Shape> submarineAndMines = _persistence.Load(fileName, ref gameTime, ref _destroyedMineCount);
+            List<Shape> submarineAndMines = _persistence.Load(fileName, ref _gameTime, ref _destroyedMineCount);
 
             _submarine = submarineAndMines[0];
             submarineAndMines.RemoveAt(0);
 
             _mines.Clear();
             _mines = submarineAndMines;
+
+            GameCreated?.Invoke(this, EventArgs.Empty);
 
             CheckGame();
         }
@@ -108,15 +115,24 @@ namespace Model
                 mines.Add(_mines[i]);
             }
             Shape submarine = _submarine;
-            int gameTime = this.gameTime;
+            int gameTime = _gameTime;
             int destroyedMineCount = _destroyedMineCount;
 
             _persistence.Save(fileName, mines, submarine, gameTime, destroyedMineCount);
         }
 
+        public void GameTimeElapse()
+        {
+            if (IsGameOver)
+                return;
+
+            _gameTime++;
+            GameTimeElapsed?.Invoke(this, EventArgs.Empty);
+        }
+
         public void PauseGame()
         {
-            TimePaused?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, false, false, false, false));
+            TimePaused?.Invoke(this, new SubmarineEventArgs(_gameTime, _destroyedMineCount, false, false, false, false));
         }
 
         public void Submarine_MoveUp()
@@ -125,7 +141,7 @@ namespace Model
             {
                 _submarine.Y = _submarine.Y - SubmarineStep;
 
-                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, true, false, false, false));
+                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(_gameTime, _destroyedMineCount, true, false, false, false));
                 CheckGame();
             }
         }
@@ -135,7 +151,7 @@ namespace Model
             if (_submarine.Y < (GameAreaHeight - _submarine.Height) - SubmarineStep)
             {
                 _submarine.Y = _submarine.Y + SubmarineStep;
-                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, false, true, false, false));
+                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(_gameTime, _destroyedMineCount, false, true, false, false));
                 CheckGame();
             }
         }
@@ -145,7 +161,7 @@ namespace Model
             if (_submarine.X > SubmarineStep)
             {
                 _submarine.X = _submarine.X - SubmarineStep;
-                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, false, false, true, false));
+                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(_gameTime, _destroyedMineCount, false, false, true, false));
                 CheckGame();
             }
         }
@@ -155,7 +171,7 @@ namespace Model
             if (_submarine.X < (GameAreaWidth - _submarine.Width) - SubmarineStep)
             {
                 _submarine.X = _submarine.X + SubmarineStep;
-                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, false, false, false, true));
+                SubmarineMoved?.Invoke(this, new SubmarineEventArgs(_gameTime, _destroyedMineCount, false, false, false, true));
                 CheckGame();
             }
         }
@@ -165,11 +181,12 @@ namespace Model
             for (int i = 0; i < _mines.Count; ++i)
             {
                 _mines[i].Y = _mines[i].Y + (_mines[i].Weight * MineStep);
+                MineMoved?.Invoke(this, new MineEventArgs(i, _destroyedMineCount));
                 if (_mines[i].Y > GameAreaHeight)
                 {
                     _mines.RemoveAt(i);
                     _destroyedMineCount++;
-                    MineDestroyed?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, false, false, false, false));
+                    MineDestroyed?.Invoke(this, new MineEventArgs(i, _destroyedMineCount));
                     i--;
                 }
             }
@@ -177,7 +194,7 @@ namespace Model
             CheckGame();
         }
 
-        public Shape AddMine()
+        public void AddMine()
         {
             int mineX = _random.Next(1, GameAreaWidth - MineSize);
             int mineWeight = _random.Next(1, 4);
@@ -193,8 +210,7 @@ namespace Model
             }
 
             _mines.Add(newMine);
-
-            return newMine;
+            MineAdded?.Invoke(this, new MineEventArgs(_mines.Count - 1, _destroyedMineCount));
         }
 
         #endregion
@@ -220,9 +236,9 @@ namespace Model
 
                 if (collisionLeftAndBottom || collisionRightAndBottom || collisionLeftAndTop || collisionRightAndTop)
                 {
-                    gameTime = 0;
+                    _gameTime = 0;
                     _destroyedMineCount = 0;
-                    GameOver?.Invoke(this, new SubmarineEventArgs(gameTime, _destroyedMineCount, false, false, false, false));
+                    GameOver?.Invoke(this, new SubmarineEventArgs(_gameTime, _destroyedMineCount, false, false, false, false));
                 }
             }
         }
