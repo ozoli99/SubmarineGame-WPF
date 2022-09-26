@@ -32,6 +32,7 @@ az eltelt idő, valamint a felrobbant aknák száma. Elfogadása után új ját�
 - Szintén dialógusablakkal végezzük el a mentést, illetve a betöltést, a fájlneveket a
 felhasználó adja meg. Valamint a játék menüsorból való bezárása esetén is egy dialógusablak
 bizonyosodik meg a szándékunkról.
+![Use case diagram](https://github.com/ozoli99/SubmarineGame-WF/blob/main/Submarine%20Game%20Use%20Case%20Diagram.jpeg)
 ## Tervezés
 ### Programszerkezet:
 - A programot háromrétegű (perzisztencia réteggel együtt négyrétegű)
@@ -40,6 +41,7 @@ nézetmodell a **SubmarineGame.ViewModel**, a modell a **SubmarineGame.Model**,
 míg a perzisztencia a **SubmarineGame.Persistence** névtérben helyezkedik el.
 Továbbá a rétegeket külön projektként adjuk hozzá az újrafelhasználhatóság
 érdekében.
+![Package diagram](https://github.com/ozoli99/SubmarineGame-WPF/blob/main/Blank%20diagram.jpeg)
 ### Perzisztencia:
 - Az adatkezelés feladata a tengeralattjáró, valamint az aknák helyzetével,
 tulajdonságaival kapcsolatos információk tárolása, valamint a betöltés/mentés
@@ -60,6 +62,7 @@ menteni az aktuális állást.
 második sora a tengeralattjáró adatait, a többi sora pedig az aknák adatait,
 szóközökkel elválasztva. Az első soron kívül mindegyik sor 6 számot tartalmaz (típus,
 x, y, szélesség, magasság, súly).
+![Persistence class diagram](https://github.com/ozoli99/SubmarineGame-WPF/blob/main/Persistence.jpeg)
 ### Modell:
 - A modell lényegi részét a **SubmarineGameModel** osztály valósítja meg, amely
 beállítja a megfelelő koordinátákat (ellenőrzés után), valamint a többi paramétert,
@@ -81,6 +84,7 @@ számát, valamint a mozgás megfelelő irányát.
 - A modell példányosításkor megkapja az adatkezelés felületét, amelynek
 segítségével lehetőséget ad betöltésre (**LoadGame**) és mentésre (**SaveGame**). Ezt a
 **_persistence** adattagban tárolja.
+![Model class diagram](https://github.com/ozoli99/SubmarineGame-WPF/blob/main/Model.jpeg)
 ### Nézetmodell:
 - A nézetmodell tulajdonképpen a modell és a nézet közötti kommunkációt és
 megjelenítést biztosítja a **SubmarineGameViewModel** osztály megvalósításával. Ez
@@ -104,6 +108,7 @@ tengeralattjáró mozgatására
 - Tartalmaz eseménykezelőket is, amelyek a modell eseményeit kezelik le. Ilyen a
 **Model_SubmarineMoved**, **Model_MineMoved**, **Model_MineDestroyed**,
 **Model_MineAdded**, **Model_GameCreated** és a **Model_GameTimeElapsed**
+![ViewModel class diagram](https://github.com/ozoli99/SubmarineGame-WPF/blob/main/ViewModel.jpeg)
 ### Nézet:
 - A nézetet a **MainWindow** osztály biztosítja, amely XAML leíró nyelv segítségével lett
 megvalósítva
@@ -123,3 +128,4 @@ valamint tartalmazza a megfelelő időzítőket, és lekezeli a nézet (**View_C
 modell (**Model_GameOver**, **Model_TimePaused**) és a nézetmodell
 (**ViewModel_NewGame**, **ViewModel_LoadGame**, **ViewModel_SaveGame**,
 **ViewModel_ExitGame**) által kiváltott eseményeket
+![App class diagram](https://github.com/ozoli99/SubmarineGame-WPF/blob/main/App.jpeg)
