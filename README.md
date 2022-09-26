@@ -12,6 +12,7 @@ A program biztosítson lehetőséget új játék kezdésére, valamint játék s
 telik az idő, és nem mozog semmi a játékban). Ismerje fel, ha vége a játéknak, és jelenítse meg,
 mennyi volt a játékidő. Ezen felül szüneteltetés alatt legyen lehetőség a játék elmentésére, valamint
 betöltésére.
+![Game](https://github.com/ozoli99/SubmarineGame-WPF/blob/main/SubmarineGameWPF.png)
 ## A feladat elemzése
 - A játékban egy játkos vesz részt, valamint egy nehézségi szint van, ugyanakkor az aknák
 három típus valamelyikét képviselik: könnyű, közepes, nehéz.
